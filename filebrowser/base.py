@@ -82,9 +82,11 @@ class FileListing():
         if dirs:
             for d in dirs:
                 self._walk(os.path.join(path, d), filelisting)
+                filelisting.extend([path_strip(os.path.join(path,d), self.site.directory)])
 
-        filelisting.extend(dirs)
-        filelisting.extend(files)
+        if files:
+            for f in files:
+                filelisting.extend([path_strip(os.path.join(path,f), self.site.directory)])
 
     
     def walk(self):
@@ -263,6 +265,10 @@ class FileObject():
         "path relative to DIRECTORY"
         return path_strip(self.path, self.site.directory)
     path_relative_directory = property(_path_relative_directory)
+
+    def _dir(self):
+        return os.path.dirname(self.path_relative_directory)
+    dir = property(_dir)
     
     def _url(self):
         return self.site.storage.url(self.path)
