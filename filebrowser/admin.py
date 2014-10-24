@@ -16,7 +16,7 @@ class FileBrowserAdmin(admin.ModelAdmin):
         return False
 
     def get_urls(self):
-        info = self.model._meta.app_label, self.model._meta.module_name
+        info = self.model._meta.app_label, self.model._meta.model_name
         return patterns('',
             url('^$', self.admin_site.admin_view(self.filebrowser_view), name='{0}_{1}_changelist'.format(*info)),
         )
