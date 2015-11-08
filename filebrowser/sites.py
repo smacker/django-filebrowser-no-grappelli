@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.admin.sites import site as admin_site
 from django.views.decorators.cache import never_cache
 from django.utils.translation import ugettext as _
 from django import forms
@@ -346,8 +347,8 @@ class FileBrowserSite(object):
             page = p.page(page_nr)
         except (EmptyPage, InvalidPage):
             page = p.page(p.num_pages)
-
-        return render_to_response('filebrowser/index.html', {
+            
+        context = {
             'p': p,
             'page': page,
             'filelisting': filelisting,
@@ -358,7 +359,18 @@ class FileBrowserSite(object):
             'breadcrumbs': get_breadcrumbs(query, query.get('dir', '')),
             'breadcrumbs_title': "",
             'filebrowser_site': self
-        }, context_instance=Context(request, current_app=self.name))
+        }
+        
+        if hasattr(admin_site,'has_permission'):
+            context['has_permission'] = admin_site.has_permission(request)
+        if hasattr(admin_site, 'site_url'):
+            context['site_url'] = admin_site.site_url
+
+        return render_to_response(
+            'filebrowser/index.html',
+            context,
+            context_instance=Context(request, current_app=self.name)
+        )
 
     def createdir(self, request):
         "Create Directory"
