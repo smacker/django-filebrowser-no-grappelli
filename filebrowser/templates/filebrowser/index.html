@@ -13,7 +13,7 @@
 <!-- JAVASCRIPTS -->
 {% block extrahead %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static "admin/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.min.js" %}"></script>
     <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
     {% ifequal query.pop '1' %} <!-- FileBrowseField -->
     <script language="javascript" type="text/javascript" src="{% static "filebrowser/js/FB_FileBrowseField.js" %}"></script>
@@ -87,7 +87,7 @@
             {% block search %}
                 <div id="toolbar"><form id="changelist-search" action="" method="get">
                 <div><!-- DIV needed for valid HTML -->
-                <label for="searchbar"><img src="{% static "admin/img/icon_searchbox.png" %}" alt="Search" /></label>
+                <label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search" /></label>
                 <input type="text" size="40" name="q" value="{{ query.q }}" id="searchbar" />
                 <input type="submit" value="{% trans 'Search' %}" />
                 {% if query.filter_type %}<input type="hidden" name="filter_type" value="{{ query.filter_type }}" />{% endif %}

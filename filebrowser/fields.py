@@ -41,7 +41,7 @@ class FileBrowseWidget(Input):
         if value != "" and not isinstance(value, FileObject):
             value = FileObject(value, site=self.site)
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
-        final_attrs['search_icon'] = static('filebrowser/img/filebrowser_icon_show.gif')
+        final_attrs['search_icon'] = static('admin/img/search.svg')
         final_attrs['url'] = url
         final_attrs['directory'] = self.directory
         final_attrs['extensions'] = self.extensions
@@ -155,7 +155,7 @@ class FileBrowseUploadWidget(Input):
         if value != "" and not isinstance(value, FileObject):
             value = FileObject(value, site=self.site)
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
-        final_attrs['search_icon'] = '/static/filebrowser/img/filebrowser_icon_show.gif'
+        final_attrs['search_icon'] = '/static/admin/img/search.svg'
         final_attrs['url'] = url
         final_attrs['directory'] = self.directory
         final_attrs['extensions'] = self.extensions

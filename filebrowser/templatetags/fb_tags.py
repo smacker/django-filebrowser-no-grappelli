@@ -4,6 +4,7 @@ from django import VERSION as DJANGO_VERSION
 from django import template
 from django.template import TemplateSyntaxError
 from django.utils.http import urlquote
+from django.utils.safestring import mark_safe
 
 from filebrowser.settings import EXTENSIONS, SELECT_FORMATS
 
@@ -153,7 +154,7 @@ def get_file_extensions(qs):
             for item in v:
                 if item:
                     extensions.append(item)
-    return extensions
+    return mark_safe(extensions)
 
 register.simple_tag(get_file_extensions)
 
