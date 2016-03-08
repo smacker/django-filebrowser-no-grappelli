@@ -1,4 +1,5 @@
 # coding: utf-8
+import django
 import os
 
 from django import forms
@@ -14,6 +15,12 @@ from django.contrib.admin.templatetags.admin_static import static
 from filebrowser.base import FileObject
 from filebrowser.settings import ADMIN_THUMBNAIL, EXTENSIONS, UPLOAD_TEMPDIR
 from filebrowser.sites import site
+
+
+if django.VERSION >= (1, 8):
+    _charfield_base_class = CharField
+else:
+    _charfield_base_class = with_metaclass(models.SubfieldBase, CharField)
 
 
 class FileBrowseWidget(Input):
@@ -82,7 +89,7 @@ class FileBrowseFormField(forms.CharField):
         return value
 
 
-class FileBrowseField(with_metaclass(models.SubfieldBase, CharField)):
+class FileBrowseField(_charfield_base_class):
     description = "FileBrowseField"
 
     def __init__(self, *args, **kwargs):
@@ -199,7 +206,7 @@ class FileBrowseUploadFormField(forms.CharField):
         return value
 
 
-class FileBrowseUploadField(CharField):
+class FileBrowseUploadField(_charfield_base_class):
     """
     Model field which renders with an option to browse site.directory as well
     as upload a file to a temporary folder (you still need to somehow move that
@@ -207,7 +214,6 @@ class FileBrowseUploadField(CharField):
     """
 
     description = "FileBrowseUploadField"
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         self.site = kwargs.pop('site', site)
