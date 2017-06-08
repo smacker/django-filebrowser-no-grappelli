@@ -75,7 +75,10 @@ def get_default_site(app_name='filebrowser'):
     name = 'filebrowser'
 
     # Django's default name resolution method (see django.core.urlresolvers.reverse())
-    app_list = resolver.app_dict[app_name]
+    try:
+        app_list = resolver.app_dict[app_name]
+    except KeyError:
+        return None
     if name not in app_list:
         name = app_list[0]
 
