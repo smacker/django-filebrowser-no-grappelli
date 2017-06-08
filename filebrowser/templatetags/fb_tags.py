@@ -123,9 +123,9 @@ class SelectableNode(template.Node):
             format = self.format.resolve(context)
         except template.VariableDoesNotExist:
             format = ''
-        if filetype and format and filetype in SELECT_FORMATS[format]:
+        if format and filetype in SELECT_FORMATS[format]:
             selectable = True
-        elif filetype and format and filetype not in SELECT_FORMATS[format]:
+        elif format and filetype not in SELECT_FORMATS[format]:
             selectable = False
         else:
             selectable = True
