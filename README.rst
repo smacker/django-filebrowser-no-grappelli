@@ -28,7 +28,7 @@ Requirements
 
 FileBrowser 3.7 requires
 
-* Django 1.8/1.9/1.10/1.11 (http://www.djangoproject.com)
+* Django 1.10/1.11 (http://www.djangoproject.com)
 * Pillow (https://github.com/python-imaging/Pillow)
 
 No Grappelli

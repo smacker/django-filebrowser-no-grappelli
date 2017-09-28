@@ -270,7 +270,7 @@ class FileObject():
     def date(self):
         "Modified time (from site.storage) as float (mktime)"
         if self.exists:
-            return time.mktime(self.site.storage.modified_time(self.path).timetuple())
+            return time.mktime(self.site.storage.get_modified_time(self.path).timetuple())
         return None
 
     @property
@@ -478,7 +478,7 @@ class FileObject():
         version_path = self.version_path(version_suffix, extra_options)
         if not self.site.storage.isfile(version_path):
             version_path = self._generate_version(version_path, options)
-        elif self.site.storage.modified_time(path) > self.site.storage.modified_time(version_path):
+        elif self.site.storage.get_modified_time(path) > self.site.storage.get_modified_time(version_path):
             version_path = self._generate_version(version_path, options)
         return FileObject(version_path, site=self.site)
 

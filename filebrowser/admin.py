@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from django.contrib import admin
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from .models import FileBrowser
 from .settings import SHOW_IN_DASHBOARD
