@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DJANGO_VERSIONS=("1.8" "1.9" "1.10", "1.11")
+DJANGO_VERSIONS=("1.8.0" "1.9.0" "1.10.0" "1.11.0" "2.0a")
 VIRTUALENV_DIR="envs"
 PROJECTS_DIR="projects"
 BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -19,7 +19,7 @@ do
         virtualenv --system-site-packages "$VIRTUALENV_DIR/$version"
     fi
     source "$VIRTUALENV_DIR/$version/bin/activate"
-    pip install "django~=$version.0"
+    pip install "django~=$version"
 
     echo "install test dependencies"
     pip install -r "$BASEDIR/tests/requirements.txt"

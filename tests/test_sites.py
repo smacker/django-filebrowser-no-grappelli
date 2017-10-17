@@ -4,10 +4,13 @@ import os
 import json
 import shutil
 
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 try:
     from django.utils.six.moves.urllib.parse import urlencode
-except:
+except ImportError:
     from django.utils.http import urlencode
 from mock import patch
 
