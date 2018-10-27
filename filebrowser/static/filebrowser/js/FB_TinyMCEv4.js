@@ -5,11 +5,14 @@
  */
 var FileBrowserDialogue = {
     fileSubmit : function (FileURL) {
-        parentWin = (!window.frameElement && window.dialogArguments) || opener || parent || top;
+        parentWin = (!window.frameElement && window.dialogArguments) || parent;
         tinymce = tinyMCE = parentWin.tinymce;
         self.editor = tinymce.EditorManager.activeEditor;
         self.params = self.editor.windowManager.getParams();
-        parentWin.document.getElementById(self.params.input).value = FileURL;
+        input_control = parentWin.document.getElementById(self.params.input);
+        if (input_control != null) {
+            input_control.value = FileURL;
+        }
         self.editor.windowManager.close(parentWin);
     },
 }
