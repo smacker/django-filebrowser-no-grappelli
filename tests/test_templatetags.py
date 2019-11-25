@@ -18,5 +18,5 @@ class GetFileExtensionsTemplateTagTests(TestCase):
     def test_get_filtered(self):
         self.assertEqual(
             get_file_extensions(QueryDict('type=image')),
-            "['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff']"
+            "[\".jpg\", \".jpeg\", \".gif\", \".png\", \".tif\", \".tiff\"]"
         )
