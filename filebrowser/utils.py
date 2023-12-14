@@ -4,11 +4,13 @@ import re
 import os
 import unicodedata
 import math
+from unidecode import unidecode
 
 import six
 from django.utils.module_loading import import_string
-
-from filebrowser.settings import STRICT_PIL, NORMALIZE_FILENAME, CONVERT_FILENAME
+from django.utils.encoding import smart_unicode
+from django.template.defaultfilters import slugify
+from filebrowser.settings import STRICT_PIL, NORMALIZE_FILENAME, CONVERT_FILENAME, SLUGIFY_FILENAME
 from filebrowser.settings import VERSION_PROCESSORS
 
 if STRICT_PIL:
@@ -28,6 +30,18 @@ def convert_filename(value):
     """
     Convert Filename.
     """
+    if SLUGIFY_FILENAME:
+        chunks = value.split(os.extsep)
+        normalized = []
+        for v in chunks:
+            cleaned_val = re.sub(r'[_.,:;@#$%^&?*|()\[\]]', '-', v)
+            cleaned_val = slugify(unidecode(smart_unicode(cleaned_val)))
+            normalized.append(cleaned_val)
+
+        if len(normalized) > 1:
+            value = '.'.join(normalized)
+        else:
+            value = normalized[0]
 
     if NORMALIZE_FILENAME:
         chunks = value.split(os.extsep)

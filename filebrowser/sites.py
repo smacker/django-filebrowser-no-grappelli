@@ -26,6 +26,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import PermissionDenied
 
 from filebrowser import signals
 from filebrowser.base import FileListing, FileObject
@@ -33,12 +34,23 @@ from filebrowser.decorators import path_exists, file_exists
 from filebrowser.storage import FileSystemStorageMixin
 from filebrowser.templatetags.fb_tags import query_helper
 from filebrowser.utils import convert_filename
-from filebrowser.settings import (DIRECTORY, EXTENSIONS, SELECT_FORMATS, ADMIN_VERSIONS, ADMIN_THUMBNAIL, 
-    MAX_UPLOAD_SIZE, NORMALIZE_FILENAME, CONVERT_FILENAME, SEARCH_TRAVERSE, EXCLUDE, VERSIONS, 
+from filebrowser.settings import (DIRECTORY, EXTENSIONS, SELECT_FORMATS, ADMIN_VERSIONS, ADMIN_THUMBNAIL,
+    MAX_UPLOAD_SIZE, NORMALIZE_FILENAME, CONVERT_FILENAME, SEARCH_TRAVERSE, EXCLUDE, VERSIONS,
     VERSIONS_BASEDIR, EXTENSION_LIST, DEFAULT_SORTING_BY, DEFAULT_SORTING_ORDER, LIST_PER_PAGE,
     OVERWRITE_EXISTING, DEFAULT_PERMISSIONS, UPLOAD_TEMPDIR, ADMIN_CUSTOM
 )
 
+
+def check_permission(perm):
+
+    def decorator(view_func):
+        def wrap(instance, request, *args, **kwargs):
+            if not request.user.has_perm(perm):
+                raise PermissionDenied
+            else:
+                return view_func(instance, request, *args, **kwargs)
+        return wrap
+    return decorator
 
 
 # This use admin_custom and not admin.sites.site of Django.
@@ -271,6 +283,7 @@ class FileBrowserSite(object):
         "filebrowser.site URLs"
         return self.get_urls(), self.app_name, self.name
 
+    @check_permission('filebrowser.add_filebrowser')
     def browse(self, request):
         "Browse Files/Directories."
         filter_re = []
@@ -356,6 +369,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.add_filebrowser')
     def createdir(self, request):
         "Create Directory"
         from filebrowser.forms import CreateDirForm
@@ -397,6 +411,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.add_filebrowser')
     def upload(self, request):
         "Multipe File Upload."
         query = request.GET
@@ -415,6 +430,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.delete_filebrowser')
     def delete_confirm(self, request):
         "Delete existing File/Directory."
         query = request.GET
@@ -453,6 +469,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.delete_filebrowser')
     def delete(self, request):
         "Delete existing File/Directory."
         query = request.GET
@@ -472,6 +489,7 @@ class FileBrowserSite(object):
         redirect_url = reverse("filebrowser:fb_browse", current_app=self.name) + query_helper(query, "", "filename,filetype")
         return HttpResponseRedirect(redirect_url)
 
+    @check_permission('filebrowser.change_filebrowser')
     def detail(self, request):
         """
         Show detail page for a file.
@@ -531,6 +549,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.add_filebrowser')
     def version(self, request):
         """
         Version detail.
@@ -551,6 +570,7 @@ class FileBrowserSite(object):
             }
         ))
 
+    @check_permission('filebrowser.add_filebrowser')
     def _upload_file(self, request):
         """
         Upload file to the server.

@@ -83,6 +83,8 @@ MAX_UPLOAD_SIZE = getattr(settings, "FILEBROWSER_MAX_UPLOAD_SIZE", 10485760)
 NORMALIZE_FILENAME = getattr(settings, "FILEBROWSER_NORMALIZE_FILENAME", False)
 # Convert Filename (replace spaces and convert to lowercase)
 CONVERT_FILENAME = getattr(settings, "FILEBROWSER_CONVERT_FILENAME", True)
+SLUGIFY_FILENAME = getattr(settings, "FILEBROWSER_SLUGIFY_FILENAME", False)
+
 # Max. Entries per Page
 # Loading a Sever-Directory with lots of files might take a while
 # Use this setting to limit the items shown
