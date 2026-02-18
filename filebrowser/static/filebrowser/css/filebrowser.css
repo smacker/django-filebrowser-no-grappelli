@@ -220,3 +220,29 @@ span.qq-upload-file {
 .popup.filebrowser.change-list .filtered #toolbar {
     margin-right: 260px;
 }
+
+#changelist .changelist-form-container {
+    flex-wrap: wrap;
+}
+
+#changelist-form {
+    width: 100%;
+}
+
+#changelist {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start
+}
+
+@media (max-width: 768px) {
+    #changelist {
+        flex-wrap: wrap
+    }
+    #changelist-filter {
+        min-width: 100%;
+    }
+    #changelist .changelist-form-container:not(:has(#changelist-filter)) > div {
+        width: 97%;
+    }
+}
