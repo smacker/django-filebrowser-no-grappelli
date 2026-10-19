@@ -5,7 +5,10 @@ import ntpath
 import posixpath
 import shutil
 
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from filebrowser.base import FileObject, FileListing
 from filebrowser.sites import site
@@ -73,7 +76,7 @@ class FileObjectUnicodeTests(TestCase):
         expected = u'測試文件_large--680x0.jpg'
 
         shutil.copy(self.STATIC_IMG_PATH, path_unicode)
-        f = FileObject(path_unicode, site=site)
+        f = FileObject(os.path.join(self.DIRECTORY, 'folder', '測試文件.jpg'), site=site)
         version = f.version_generate('large')
         self.assertEqual(version.filename, expected)
 
