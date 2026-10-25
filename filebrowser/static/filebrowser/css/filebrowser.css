@@ -202,9 +202,29 @@ span.qq-upload-file {
     background: transparent url('../img/cancel.png') 0 0 no-repeat scroll;
 }
 
+/* Breadcrumbs */
+div.breadcrumbs {
+    background: var(--breadcrumbs-bg, #79aec8);
+    color: var(--breadcrumbs-fg, #c4dce8);
+    padding: 10px 40px;
+    border: none;
+    font-size: 0.875rem;
+}
+
+div.breadcrumbs a {
+    color: var(--breadcrumbs-link-fg, #fff);
+}
+
+div.breadcrumbs a:focus,
+div.breadcrumbs a:hover {
+    color: var(--breadcrumbs-fg, #c4dce8);
+}
+
 /* Popup fixes */
-.popup.filebrowser .breadcrumbs {
-    padding-left: 10px;
+.popup.filebrowser div.breadcrumbs {
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
 }
 
 .popup.filebrowser .object-tools {
