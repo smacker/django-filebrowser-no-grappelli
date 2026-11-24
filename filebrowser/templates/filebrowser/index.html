@@ -109,18 +109,14 @@
     <div id="content-main">
         <!-- POP-UP BREADCRUMBS -->
         {% if query.pop %}
-            <div class="breadcrumbs">
             {% include "filebrowser/include/breadcrumbs.html" %}
-            </div>
         {% endif %}
 
         <!-- OBJECT-TOOLS -->
-        {% block object-tools %}
-            <ul class="object-tools">
-                <li><a href="{% url 'filebrowser:fb_createdir' %}{% query_string '' 'p' %}">{% trans "New Folder" %}</a></li>
-                <li><a href="{% url 'filebrowser:fb_upload' %}{% query_string '' 'p' %}" >{% trans "Upload" %}</a></li>
-            </ul>
-        {% endblock %}
+        <ul class="object-tools">
+            <li><a href="{% url 'filebrowser:fb_createdir' %}{% query_string '' 'p' %}">{% trans "New Folder" %}</a></li>
+            <li><a href="{% url 'filebrowser:fb_upload' %}{% query_string '' 'p' %}" >{% trans "Upload" %}</a></li>
+        </ul>
 
         <div class="module filtered" id="changelist">
         <div class="changelist-form-container">

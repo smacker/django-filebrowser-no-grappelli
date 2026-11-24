@@ -4,7 +4,10 @@ import shutil
 
 from django.conf import settings
 from django.template import Context, Template, TemplateSyntaxError
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from tests.base import FilebrowserTestCase as TestCase
 from filebrowser.settings import STRICT_PIL

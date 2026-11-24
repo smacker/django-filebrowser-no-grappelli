@@ -2,7 +2,10 @@
 
 import shutil
 
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from filebrowser.settings import VERSIONS
 from tests import FilebrowserTestCase as TestCase

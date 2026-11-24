@@ -25,17 +25,16 @@ class FileBrowseWidget(Input):
     class Media:
         js = ('filebrowser/js/AddFileBrowser.js',)
 
-    def __init__(self, attrs={}):
-        super(FileBrowseWidget, self).__init__(attrs)
-        self.site = attrs.get('filebrowser_site', None)
-        self.directory = attrs.get('directory', '')
-        self.extensions = attrs.get('extensions', '')
-        self.format = attrs.get('format', '')
+    def __init__(self, attrs=None):
         if attrs is not None:
             self.attrs = attrs.copy()
         else:
             self.attrs = {}
-        super(FileBrowseWidget, self).__init__(attrs)
+        self.site = self.attrs.get('filebrowser_site', None) or site
+        self.directory = self.attrs.get('directory', '')
+        self.extensions = self.attrs.get('extensions', '')
+        self.format = self.attrs.get('format', '')
+        super(FileBrowseWidget, self).__init__(self.attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
         url = reverse(self.site.name + ":fb_browse")
@@ -124,19 +123,26 @@ class FileBrowseField(CharField):
 
     def formfield(self, **kwargs):
         widget_class = kwargs.get('widget', FileBrowseWidget)
-        attrs = {}
-        attrs["filebrowser_site"] = self.site
-        attrs["directory"] = self.directory
-        attrs["extensions"] = self.extensions
-        attrs["format"] = self.format
+        attrs = {
+            "filebrowser_site": self.site,
+            "directory": self.directory,
+            "extensions": self.extensions,
+            "format": self.format,
+        }
+        if isinstance(widget_class, type):
+            widget = widget_class(attrs=attrs)
+        else:
+            widget = widget_class
         defaults = {
             'form_class': FileBrowseFormField,
-            'widget': widget_class(attrs=attrs),
+            'widget': widget,
             'filebrowser_site': self.site,
             'directory': self.directory,
             'extensions': self.extensions,
             'format': self.format
         }
+        defaults.update(kwargs)
+        defaults['widget'] = widget
         return super(FileBrowseField, self).formfield(**defaults)
 
 FORMFIELD_FOR_DBFIELD_DEFAULTS[FileBrowseField] = {'widget': FileBrowseWidget}
@@ -152,18 +158,17 @@ class FileBrowseUploadWidget(Input):
         }
 
     def __init__(self, attrs=None):
-        super(FileBrowseUploadWidget, self).__init__(attrs)
-        self.site = attrs.get('site', '')
-        self.directory = attrs.get('directory', '')
-        self.extensions = attrs.get('extensions', '')
-        self.format = attrs.get('format', '')
-        self.upload_to = attrs.get('upload_to', '')
-        self.temp_upload_dir = attrs.get('temp_upload_dir', '')
         if attrs is not None:
             self.attrs = attrs.copy()
         else:
             self.attrs = {}
-        super(FileBrowseUploadWidget, self).__init__(attrs)
+        self.site = self.attrs.get('filebrowser_site', None) or self.attrs.get('site', None) or site
+        self.directory = self.attrs.get('directory', '')
+        self.extensions = self.attrs.get('extensions', '')
+        self.format = self.attrs.get('format', '')
+        self.upload_to = self.attrs.get('upload_to', '')
+        self.temp_upload_dir = self.attrs.get('temp_upload_dir', '')
+        super(FileBrowseUploadWidget, self).__init__(self.attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
         url = reverse(self.site.name + ":fb_browse")
@@ -261,16 +266,23 @@ class FileBrowseUploadField(CharField):
         return value.path
 
     def formfield(self, **kwargs):
-        attrs = {}
-        attrs["site"] = self.site
-        attrs["directory"] = self.directory
-        attrs["extensions"] = self.extensions
-        attrs["format"] = self.format
-        attrs["upload_to"] = self.upload_to
-        attrs["temp_upload_dir"] = self.temp_upload_dir
+        widget_class = kwargs.get('widget', FileBrowseUploadWidget)
+        attrs = {
+            "site": self.site,
+            "filebrowser_site": self.site,
+            "directory": self.directory,
+            "extensions": self.extensions,
+            "format": self.format,
+            "upload_to": self.upload_to,
+            "temp_upload_dir": self.temp_upload_dir,
+        }
+        if isinstance(widget_class, type):
+            widget = widget_class(attrs=attrs)
+        else:
+            widget = widget_class
         defaults = {
             'form_class': FileBrowseUploadFormField,
-            'widget': FileBrowseUploadWidget(attrs=attrs),
+            'widget': widget,
             'site': self.site,
             'directory': self.directory,
             'extensions': self.extensions,
@@ -278,6 +290,8 @@ class FileBrowseUploadField(CharField):
             'upload_to': self.upload_to,
             'temp_upload_dir': self.temp_upload_dir
         }
+        defaults.update(kwargs)
+        defaults['widget'] = widget
         return super(FileBrowseUploadField, self).formfield(**defaults)
 
 

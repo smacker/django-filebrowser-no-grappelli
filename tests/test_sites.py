@@ -9,7 +9,10 @@ try:
 except ImportError:
     from django.core.urlresolvers import reverse
 from django.utils.http import urlencode
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from filebrowser.settings import VERSIONS, DEFAULT_PERMISSIONS
 from filebrowser.base import FileObject
@@ -290,3 +293,34 @@ class DeleteViewTests(TestCase):
         self.assertFalse(site.storage.exists(self.F_IMAGE.path))
         for version in versions:
             self.assertFalse(site.storage.exists(version.path))
+
+
+class AdminTests(TestCase):
+    def setUp(self):
+        super(AdminTests, self).setUp()
+        from django.contrib.admin.sites import AdminSite
+        from filebrowser.admin import FileBrowserAdmin
+        from filebrowser.models import FileBrowser
+        from django.test.client import RequestFactory
+        self.admin_site = AdminSite()
+        self.admin = FileBrowserAdmin(FileBrowser, self.admin_site)
+        self.factory = RequestFactory()
+
+    def test_permissions(self):
+        request = self.factory.get('/admin/')
+        request.user = self.user
+        self.assertFalse(self.admin.has_add_permission(request))
+        self.assertFalse(self.admin.has_delete_permission(request))
+        self.assertTrue(self.admin.has_view_permission(request))
+        self.assertTrue(self.admin.has_module_permission(request))
+        model_perms = self.admin.get_model_perms(request)
+        self.assertTrue(model_perms.get('view') or model_perms.get('change'))
+
+
+class FieldsTests(TestCase):
+    def test_filebrowse_widget_render(self):
+        from filebrowser.fields import FileBrowseField, FileBrowseWidget
+        field = FileBrowseField(max_length=200)
+        form_field = field.formfield()
+        rendered = form_field.widget.render('test_field', '')
+        self.assertIn('name="test_field"', rendered)
